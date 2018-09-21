@@ -344,6 +344,7 @@ public static void main(String[] args) throws IOException {
     String lectura;
     do {
         lectura = example.yylex();
+        System.out.println("lectura: ", lectura);
     } while(lectura != "fin");
     br.close();
 
