@@ -1,4 +1,4 @@
-package xd;
+package lexical_analyzer;
 import java.util.Scanner;
 import java.io.*;
 %%
@@ -9,7 +9,7 @@ import java.io.*;
 
 %{
 public static void main(String[] args) throws IOException {
-    Reader br = new FileReader("test.txt");
+    Reader br = new FileReader("../test.txt");
     Code example = new Code(br);
     String lectura;
     do {
