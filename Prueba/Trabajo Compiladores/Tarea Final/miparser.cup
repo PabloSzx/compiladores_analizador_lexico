@@ -1,0 +1,120 @@
+import java_cup.runtime.*;
+import java.io.*;
+import javax.swing.*;
+
+action code{:
+    public class AZ2012 extends JFrame{
+       public Object [][]ts= new Object[26][2];//arreglo que almacena variables creadas y su valor. pseudotabla de simbolos
+       private int ultima_posicion = 0;//cumple la funcion de un pseudopuntero
+       private JTextArea cuadro = new JTextArea(); //Lugar en donde desplegaremos las cosas que haremos.
+       public boolean flag = true;
+
+       public AZ2012(){
+                  super("Output");
+                  setBounds(500,50,300,300);
+                  setResizable(false);
+                  setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                  setVisible(true);
+                  cuadro.setBounds(550, 100, 200, 200);
+                  cuadro.setEditable(false);
+                  add(cuadro);
+       }
+       //Retorna el indice de la tabla de simbolos en donde se aloja la variable buscada 'var'
+       public int busca(String var){
+           for(int i=0 ; i<26 ; i++){
+               if (ts[i][0].equals(var)){
+                   return i;
+               }
+
+            }
+            return -1;
+       }
+       //funcion que agrega variables y su valor a la 'tabla de simbolos'
+       public void agrega(String asdf1, String asdf2){
+           ts[ultima_posicion][0] = asdf1;
+           ts[ultima_posicion][1] = asdf2;
+           ultima_posicion++;
+       }
+       //misma funcion aterior. sobregargada que agrega variables y valores a la tabla de simbolos.
+       public void agrega(String asdf1, int asdf2){
+                  ts[ultima_posicion][0] = asdf1;
+                  ts[ultima_posicion][1] = asdf2;
+                  ultima_posicion++;
+       }
+
+       //Función que usaremos para desplegar en la ventana creada
+       public void imprime(String asdf){
+            String var = cuadro.getText();
+
+            asdf = asdf.replace('"',' ');
+            cuadro.setText(var + '\n' + asdf);
+       }
+       public void imprime(int asdf){
+            String var = cuadro.getText();
+
+            String tmp = asdf+"";
+            tmp = tmp.replace('"',' ');
+            cuadro.setText(var + '\n' + tmp);
+       }
+
+       public void borrar(){
+            cuadro.setText("");
+       }
+
+    }
+    AZ2012 prog = new AZ2012();
+
+
+:}
+
+
+
+parser code{:
+    public static void main(String args[])throws Exception{
+            System.out.println("------->Traductor Sintactico<--------");
+            System.out.println("Para comenzar escriba comienzo");
+            System.out.println("Para finalizar escriba fin");
+            System.out.println("Porfavor revisar manual usuario");
+            System.out.println("**------------------------------------------------**");
+            new parser(new Yylex(System.in)).parse();
+    }
+:}
+terminal IGUAL,MAS,MENOS,POR,DIV,MENOR,MAYOR,PARA,PARC,COMIENZO,FIN,SALIDA,ENTRADA,IF,THEN,ENTER;
+terminal Integer DIGITO;
+terminal String LETRA,ESTRING;
+
+
+non terminal S,INST,INSTT,INST_IF,INST_ASIG,INST_ENTRADA,INST_SALIDA;
+non terminal Integer COND;
+non terminal Integer EXP,T,F;
+
+precedence left MAS, MENOS;
+precedence left POR, DIV;
+
+
+S::= COMIENZO ENTER INSTT FIN {:System.exit(0);:}ENTER;
+
+INSTT::= INST INSTT|
+    INST;
+
+INST::= INST_IF |
+    INST_ASIG |
+    INST_ENTRADA |
+    INST_SALIDA;
+INST_IF::= IF COND:b {:if(b==0) prog.flag = false;:} THEN INST {:prog.flag = true;:};   //Se revisa la condicion, si es falso se marca una variable publica que restringe la ejecucion de la proxima instruccion
+INST_ASIG::= LETRA:s IGUAL EXP:e {:if (prog.flag) prog.agrega(s,e);:} ENTER;        //Se agrega a la Tabla de Simbolos una variable y un valor dado
+INST_ENTRADA::= ENTRADA PARA LETRA:i PARC ENTER DIGITO:s {:if (prog.flag) prog.agrega(i,s);:} ENTER;    //Asigna a una variable un valor dado, ingresado desde teclado
+INST_SALIDA::= SALIDA PARA ESTRING:s {:if (prog.flag) prog.imprime(">> "+s);:}PARC ENTER|   //Muestra un String en la salida del programa
+    SALIDA PARA LETRA:s {:if (prog.flag) prog.imprime(">> "+prog.ts[prog.busca(s)][1]);:} PARC ENTER;   //Muestra en la salida el valor de una variable
+COND::= EXP:l MENOR EXP:r {:if(l.intValue()<r.intValue()) RESULT=1; else RESULT=0;:}|   //Comprueba relaciones entre expresiones, 1->true, 0->false
+    EXP:l MAYOR EXP:r {:if(l.intValue()>r.intValue()) RESULT=1; else RESULT=0;:}|
+    EXP:l IGUAL EXP:r {:if(l.intValue()==r.intValue()) RESULT=1; else RESULT=0;:};
+EXP::= EXP:l MAS T:r {:RESULT=l+r;:}|
+    EXP:l MENOS T:r {:RESULT=l.intValue()-r.intValue();:} |
+    T:e {:RESULT=e.intValue();:};
+T::=T:l POR F:r {:RESULT=l.intValue()*r.intValue();:}|
+    T:l DIV F:r {:RESULT=l.intValue()/r.intValue();:}|
+    F:e {:RESULT=e.intValue();:};
+F::=LETRA:s {:RESULT=(Integer)prog.ts[prog.busca(s)][1];:}|
+    DIGITO:d {:RESULT=d;:};
+
