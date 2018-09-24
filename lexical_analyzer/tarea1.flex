@@ -25,8 +25,8 @@ public static void main(String[] args) throws IOException {
 PALABRA = ([:letter:])+
 NUMERO = ([:digit:])+|(([:digit:])+(".")([:digit:])+)
 STRING = ("\""){PALABRA}("\"")
-ESPACIO = ((" ")+|("\n"))
-IDENTIFICADOR = (({NUMERO})+({PALABRA})+)
+ESPACIO = ((" ")+|("\n")|("\t"))
+IDENTIFICADOR = ({NUMERO})+({PALABRA})+ | ({PALABRA})+({NUMERO})+ 
 BOOLEAN= ("👍"|"👎")
 INSTRUCCION=("🤔"|"♻"|"🌀")
 ASIGNACION = ("=")
