@@ -28,6 +28,20 @@ PALABRA = ([:letter:])+
 NUMERO = ([:digit:])+
 FELIZ=("😁")
 SMILE=("😄")
+
+
+
+INST = {INST} | {INST_IF} | {INST_WHILE} | {INST_FOR}
+INST_IF = "if"{C1}"then"{INST}
+ID = ({PALABRA} | {PALABRA} {NUMERO})+
+ASIG = {ID}"="{EXP}
+C1 = ({EXP}{OP}{EXP})+
+EXP = {EXP}*{EXP} | {EXP}/{EXP} | {EXP}+{EXP} | {EXP}-{EXP} | {ID} | {NUMERO}
+OP = ("=="|"<"|">"|"¬"|"!"|"<>"|"<="|">=")
+INST_WHILE = ("while"|"WHILE"){C1}"then "{INST}
+INST_FOR = ("for"|"FOR"){ASIG}{C1}{ASIG}
+
+
 %%
 
 {FELIZ} {System.out.println("CARA FELIZ!"); return "happy";}
