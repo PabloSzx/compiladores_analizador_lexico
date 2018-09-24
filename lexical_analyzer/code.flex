@@ -26,9 +26,13 @@ FIN = (";")
 ESPACIO = (" ")
 PALABRA = ([:letter:])+
 NUMERO = ([:digit:])+
+FELIZ=("😁")
+SMILE=("😄")
 %%
 
+{FELIZ} {System.out.println("CARA FELIZ!"); return "happy";}
 {ESPACIO}   { System.out.println("Espacio!"); return "espacio"; }
 {PALABRA}   { System.out.println("Palabra!" + this.yytext()); return "a"; }
 {NUMERO} { System.out.println("Numero!"); return "b"; }
 {FIN} { System.out.println("Gracias!"); return "fin"; }
+{SMILE} { System.out.println("SMILE!"); return "smile"; }
