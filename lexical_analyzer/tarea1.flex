@@ -3,14 +3,14 @@ import java.util.Scanner;
 import java.io.*;
 %%
 
-%class Code
+%class tarea1
 %unicode
 %type String
 
 %{
 public static void main(String[] args) throws IOException {
     Reader br = new FileReader("../test.txt");
-    Code example = new Code(br);
+    tarea1 example = new tarea1(br);
     String lectura;
     do {
         lectura = example.yylex();
