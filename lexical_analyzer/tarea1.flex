@@ -7,6 +7,11 @@ import java.io.*;
 %unicode
 %type String
 
+%init{
+  this.i = 0;
+  this.map = new Hashtable<String, int>();
+} 
+
 %{
 private int i;
 private Hashtable<String, int> map;
@@ -25,10 +30,6 @@ public static void main(String[] args) throws IOException {
 
 %}
 
-%init{
-  this.i = 0;
-  this.map = new Hashtable<String, int>();
-} 
 PALABRA = ([:letter:])+
 NUMERO = ([:digit:])+|(([:digit:])+(".")([:digit:])+)
 STRING = ("\""){PALABRA}("\"")
