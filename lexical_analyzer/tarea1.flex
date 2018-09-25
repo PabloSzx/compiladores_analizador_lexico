@@ -61,7 +61,7 @@ PALABRA = ([:letter:])+
 NUMERO = ([:digit:])+|(([:digit:])+(".")([:digit:])+)
 STRING = ("\""){PALABRA}("\"")
 ESPACIO = ((" ")+|("\n")|("\t"))
-IDENTIFICADOR = ({NUMERO})+({PALABRA})+ | ({PALABRA})+({NUMERO})+ 
+IDENTIFICADOR = (([:digit:])*({PALABRA})([:digit:])*)+
 BOOLEAN= ("👍"|"👎")
 INSTRUCCION=("🤔"|"♻"|"🌀")
 ASIGNACION = ("=")
