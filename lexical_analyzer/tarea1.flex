@@ -40,8 +40,10 @@ private int get(boolean id) {
 }
 
 public static void main(String[] args) throws IOException {
-    Reader br = new FileReader("../test.txt");
-    tarea1 example = new tarea1(br);
+    Console cnsl = System.console();
+
+    tarea1 example = new tarea1(cnsl.reader());
+
     String lectura;
     do {
         lectura = example.yylex();
@@ -49,7 +51,6 @@ public static void main(String[] args) throws IOException {
             System.out.println(lectura);
         }
     } while(lectura != null);
-    br.close();
 
     example.printMemory();
 
